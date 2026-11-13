@@ -1,0 +1,183 @@
+{
+  "id": 92110199914496,
+  "panels": [
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "fg471811vtb0gf"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "fg471811vtb0gf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT CAST(recvTime AS DATETIME(3)) AS time,\n       CAST(attrValue AS DECIMAL(6,1)) AS 'Temperatura (°C)'\nFROM estufa\nWHERE attrName = 'temperature'\n  AND $__timeFilter(recvTime)\nORDER BY time;",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "fg471811vtb0gf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT CAST(recvTime AS DATETIME(3)) AS time,\n       CAST(attrValue AS DECIMAL(6,1)) AS 'Umidade do ar (%)'\nFROM estufa\nWHERE attrName = 'relativeHumidity'\n  AND $__timeFilter(recvTime)\nORDER BY time;",
+          "refId": "B"
+        }
+      ],
+      "title": "Temperatura e umidade do ar",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "fg471811vtb0gf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "fg471811vtb0gf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT CAST(recvTime AS DATETIME(3)) AS time,\n       CAST(attrValue AS DECIMAL(6,1)) AS 'Umidade do solo (%)'\nFROM estufa\nWHERE attrName = 'soilMoisture'\n  AND $__timeFilter(recvTime)\nORDER BY time;",
+          "refId": "A"
+        }
+      ],
+      "title": "Umidade do solo",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "fg471811vtb0gf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "text": "Desligado"
+                },
+                "1": {
+                  "color": "green",
+                  "text": "Ligado"
+                }
+              },
+              "type": "value"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 16,
+        "x": 0,
+        "y": 9
+      },
+      "id": 3,
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "fg471811vtb0gf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT CAST(recvTime AS DATETIME(3)) AS time,\n       CAST(attrValue AS SIGNED) AS 'Relé'\nFROM estufa\nWHERE attrName = 'relayState'\n  AND $__timeFilter(recvTime)\nORDER BY time;",
+          "refId": "A"
+        }
+      ],
+      "title": "Relé (irrigação)",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "fg471811vtb0gf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "max": 100,
+          "min": 0,
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 9
+      },
+      "id": 4,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "fg471811vtb0gf"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT CAST(recvTime AS DATETIME(3)) AS time,\n       CAST(attrValue AS DECIMAL(6,1)) AS 'Luminosidade (%)'\nFROM estufa\nWHERE attrName = 'illuminance'\n  AND $__timeFilter(recvTime)\nORDER BY time;",
+          "refId": "A"
+        }
+      ],
+      "title": "Luminosidade atual",
+      "type": "stat"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Estufa inteligente",
+  "uid": "apg8fm",
+  "version": 1
+}
