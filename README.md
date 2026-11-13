@@ -107,8 +107,8 @@ Exemplo de payload publicado: `{"i": 3, "l": 75.6, "t": 24.0, "a": 0, "h": 40.0,
 
 1. **Clone o repositório e entre na pasta da plataforma.**
    ```bash
-   git clone https://github.com/julbastos/Estufa-inteligente.git
-   cd Estufa-inteligente/plataforma
+   git clone https://github.com/julbastos/projeto2-Julia-juliaestufa2026.git
+   cd projeto2-Julia-juliaestufa2026/plataforma
    ```
 2. **Confira a ponte.** `mosquitto/mosquitto.conf` já está com a API key `juliaestufa2026` no `remote_clientid` e nas três linhas `topic`. Não é preciso alterar nada.
 3. **Suba o ambiente.**
