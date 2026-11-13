@@ -37,7 +37,7 @@ TOPICO_RESULTADO = "/json/" + API_KEY + "/" + DEVICE_ID + "/cmdexe"
 
 INTERVALO_MIN = 2000           # ms
 INTERVALO_MAX = 10000          # ms
-intervalo = 2000               # ms; comando setInterval altera este valor
+intervalo = 3000               # ms (padrao 3 s); comando setInterval altera este valor
 envio_ativo = True             # comando setSending altera este estado
 
 # Calibracao inicial para a simulacao (ADC de 12 bits: 0 a 4095).
@@ -114,7 +114,7 @@ if not wlan.isconnected():
     wlan.connect(SSID, SENHA)
     inicio = time.ticks_ms()
     while not wlan.isconnected():
-        if time.ticks_diff(time.ticks_ms(), inicio) > 15000:
+        if time.ticks_diff(time.ticks_ms(), inicio) > 30000:
             raise RuntimeError("Wi-Fi nao conectou")
         time.sleep(0.5)
 print("Wi-Fi ok. IP:", wlan.ifconfig()[0])
