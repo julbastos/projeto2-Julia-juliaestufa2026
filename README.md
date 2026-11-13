@@ -1,4 +1,4 @@
-# Estufa inteligente na plataforma FIWARE — Grupo `<apikey>`
+# Estufa inteligente na plataforma FIWARE — Grupo `juliaestufa2026`
 
 > Modelo de documentação do repositório do Projeto 2 (CCM520 – Internet das Coisas). Substitua tudo o que está entre `< >` e apague as instruções em itálico. O objetivo é que **outra pessoa consiga reproduzir o projeto** só com este README.
 
@@ -18,11 +18,11 @@ _Um diagrama (imagem ou ASCII) com a ESP32, o broker público, o IoT Agent, o Or
 
 | Componente | Pino da ESP32 | Observação |
 | --- | --- | --- |
-| DHT22 | `<GPIO>` | |
-| Umidade do solo | `<GPIO>` | |
-| LDR | `<GPIO>` | |
-| Relé | `<GPIO>` | |
-| Servomotor | `<GPIO>` | |
+| DHT22 | `GPIO4` | temperatura e umidade do ar |
+| Umidade do solo | `GPIO34` | ADC, atenuação 11 dB (0 a 4095) |
+| LDR | `GPIO35` | ADC, atenuação 11 dB (0 a 4095) |
+| Relé | `GPIO26` | saída digital (irrigação) |
+| Servomotor | `GPIO27` | PWM 50 Hz (janela, 0° a 180°) |
 
 **Calibração:** _como vocês converteram as leituras do ADC em % de umidade do solo e de luminosidade (valores de referência medidos)._
 
@@ -30,12 +30,12 @@ _Um diagrama (imagem ou ASCII) com a ESP32, o broker público, o IoT Agent, o Or
 
 | Item | Valor |
 | --- | --- |
-| API key | `<...>` |
-| Client id da ponte | `<...>` |
+| API key | `juliaestufa2026` |
+| Client id da ponte | `ponte_juliaestufa2026` |
 | `fiware-service` / `fiware-servicepath` | `fei` / `/estufa` |
 | `device_id` | `estufa001` |
 | Entidade | `urn:ngsi-ld:Greenhouse:001` (`Greenhouse`) |
-| Client id MQTT da ESP32 | `<...>` |
+| Client id MQTT da ESP32 | `esp32_juliaestufa2026_estufa001` |
 
 ## 5. Modelo de dados
 
@@ -43,39 +43,40 @@ _Um diagrama (imagem ou ASCII) com a ESP32, o broker público, o IoT Agent, o Or
 
 | `object_id` (firmware) | Atributo NGSI | Tipo | Unidade / faixa |
 | --- | --- | --- | --- |
-| `<...>` | `temperature` | Number | °C |
-| `<...>` | `relativeHumidity` | Number | % |
-| `<...>` | `soilMoisture` | Number | % |
-| `<...>` | `illuminance` | Number | % |
-| `<...>` | `relayState` | Number | 0/1 |
-| `<...>` | `windowAngle` | Number | 0–180 |
-| `<...>` | `samplingInterval` | Number | s |
+| `t` | `temperature` | Number | °C |
+| `h` | `relativeHumidity` | Number | % |
+| `s` | `soilMoisture` | Number | % |
+| `l` | `illuminance` | Number | % |
+| `r` | `relayState` | Number | 0/1 |
+| `a` | `windowAngle` | Number | 0–180 |
+| `i` | `samplingInterval` | Number | s |
 
-Exemplo de payload publicado: `<...>`
+Exemplo de payload publicado: `{"i": 2, "l": 75.6, "t": 24.0, "a": 0, "h": 40.0, "s": 100, "r": 0}`
 
 ### 5.2 Comandos
 
 | Comando | Valores aceitos | Resposta de sucesso | Respostas de erro |
 | --- | --- | --- | --- |
-| `setRelay` | `<...>` | `OK` | `<...>` |
-| `setServo` | `<...>` | `OK` | `<...>` |
-| `setInterval` | `<...>` | `OK` | `<...>` |
-| `setSending` | `<...>` | `OK` | `<...>` |
+| `setRelay` | `0` ou `1` | `OK` | `ERRO: setRelay aceita 0 ou 1`, `ERRO: valor invalido` |
+| `setServo` | `0` a `180` | `OK` | `ERRO: setServo aceita 0 a 180`, `ERRO: valor invalido` |
+| `setInterval` | `2` a `10` (segundos) | `OK` | `ERRO: setInterval aceita 2 a 10 segundos`, `ERRO: valor invalido` |
+| `setSending` | `1` (ativa) ou `0` (desativa) | `OK` | `ERRO: setSending aceita 0 ou 1`, `ERRO: valor invalido` |
 
 ### 5.3 Tópicos MQTT
 
 | Sentido | Tópico |
 | --- | --- |
-| Medidas | `<...>` |
-| Comandos | `<...>` |
-| Resultado | `<...>` |
+| Medidas | `/json/juliaestufa2026/estufa001/attrs` |
+| Comandos | `/juliaestufa2026/estufa001/cmd` |
+| Resultado | `/json/juliaestufa2026/estufa001/cmdexe` |
 
 ### 5.4 Ponte com o broker público
 
 | Padrão | Direção | Por quê |
 | --- | --- | --- |
-| `<...>` | `in` | `<...>` |
-| `<...>` | `out` | `<...>` |
+| `/json/juliaestufa2026/estufa001/attrs` | `in` | medidas que a estufa publica no HiveMQ precisam chegar ao IoT Agent local |
+| `/json/juliaestufa2026/estufa001/cmdexe` | `in` | resultado (`OK`/`ERRO`) dos comandos executados pela estufa volta ao IoT Agent |
+| `/juliaestufa2026/estufa001/cmd` | `out` | comandos que o IoT Agent publica localmente precisam chegar à ESP32 pelo HiveMQ |
 
 ## 6. Como reproduzir
 
